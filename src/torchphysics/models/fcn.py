@@ -4,9 +4,10 @@ import math
 
 from .model import Model
 from ..problem.spaces import Points
+from .activation_fn import Limiter
 
 
-def _construct_FC_layers(hidden, input_dim, output_dim, activations, xavier_gains):
+def _construct_FC_layers(hidden, input_dim, output_dim, activations, xavier_gains, limits):
     """Constructs the layer structure for a fully connected neural network."""
     if not isinstance(activations, (list, tuple)):
         activations = len(hidden) * [activations]
@@ -23,6 +24,7 @@ def _construct_FC_layers(hidden, input_dim, output_dim, activations, xavier_gain
         layers.append(activations[i + 1])
     layers.append(nn.Linear(hidden[-1], output_dim))
     torch.nn.init.xavier_normal_(layers[-1].weight, gain=1)
+    layers.append(Limiter(min_val=limits[0], max_val=limits[1]))
     return layers
 
 
@@ -59,6 +61,7 @@ class FCN(Model):
         hidden=(20, 20, 20),
         activations=nn.Tanh(),
         xavier_gains=5 / 3,
+        limits=(None, None),
     ):
         super().__init__(input_space, output_space)
 
@@ -68,6 +71,7 @@ class FCN(Model):
             output_dim=self.output_space.dim,
             activations=activations,
             xavier_gains=xavier_gains,
+            limits=limits,
         )
 
         self.sequential = nn.Sequential(*layers)

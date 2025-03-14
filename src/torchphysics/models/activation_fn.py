@@ -83,3 +83,20 @@ class Sinus(torch.nn.Module):
 
     def forward(self, input):
         return torch.sin(input)
+
+
+class Limiter(torch.nn.Module):
+    def __init__(self, min_val, max_val):
+        super().__init__()
+        self.min_val = min_val
+        self.max_val = max_val
+        if self.min_val and self.max_val:
+            assert self.max_val > self.min_val
+    
+    def forward(self, input):
+        res_tensor = input
+        if self.min_val or self.min_val==0:
+            res_tensor = torch.where(res_tensor < self.min_val, self.min_val, res_tensor)
+        if self.max_val:
+            res_tensor = torch.where(res_tensor > self.max_val, self.max_val, res_tensor)
+        return res_tensor
