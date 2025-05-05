@@ -15,7 +15,7 @@ from .model import Model, NormalizationLayer, AdaptiveWeightLayer, Sequential, P
 from .fcn import FCN, Harmonic_FCN, Polynomial_FCN
 from .deepritz import DeepRitzNet
 from .qres import QRES
-from .activation_fn import AdaptiveActivationFunction, ReLUn, Sinus
+from .activation_fn import AdaptiveActivationFunction, ReLUn, Sinus, Limiter
 
 # DeepONet:
 from .deeponet.deeponet import DeepONet

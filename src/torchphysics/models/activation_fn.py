@@ -83,3 +83,18 @@ class Sinus(torch.nn.Module):
 
     def forward(self, input):
         return torch.sin(input)
+
+
+class Limiter(torch.nn.Module):
+    def __init__(self, min_val, max_val):
+        super().__init__()
+        self.min_val = min_val
+        self.max_val = max_val
+        if self.min_val and self.max_val:
+            assert self.max_val > self.min_val
+
+        self.scaling_factor = self.max_val - self.min_val
+        self.shift = (self.max_val + self.min_val) / 2
+    
+    def forward(self, x):
+        return self.scaling_factor * (torch.sigmoid(x) - 0.5) + self.shift
