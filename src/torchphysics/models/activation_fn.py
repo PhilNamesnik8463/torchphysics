@@ -92,11 +92,9 @@ class Limiter(torch.nn.Module):
         self.max_val = max_val
         if self.min_val and self.max_val:
             assert self.max_val > self.min_val
+
+        self.scaling_factor = self.max_val - self.min_val
+        self.shift = (self.max_val + self.min_val) / 2
     
-    def forward(self, input):
-        res_tensor = input
-        if self.min_val or self.min_val==0:
-            res_tensor = torch.where(res_tensor < self.min_val, self.min_val, res_tensor)
-        if self.max_val:
-            res_tensor = torch.where(res_tensor > self.max_val, self.max_val, res_tensor)
-        return res_tensor
+    def forward(self, x):
+        return self.scaling_factor * (torch.sigmoid(x) - 0.5) + self.shift
